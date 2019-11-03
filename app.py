@@ -5,12 +5,13 @@ from time import sleep
 from tornado.ioloop import IOLoop
 from tornado.web import Application
 from tornado.websocket import WebSocketHandler
+from typing import List
 
 
 class BaseWebSocketHandler(WebSocketHandler):
     def check_origin(self, origin):
         # Allow all origins
-        # Otherwise, incoming requests from foreign origins will result in a 403-response.
+        # Otherwise, incoming requests from foreign origins would result in a 403-response.
         return True
 
 
@@ -18,11 +19,11 @@ class EchoBotHandler(BaseWebSocketHandler):
     """ WebSocketHandler that echoes back all incoming messages to the client.
     """
 
-    def on_message(self, message):
+    def on_message(self, message: str):
         self.write_message('You sent: ' + message)
 
 
-timebot_handlers = []
+timebot_handlers: List['TimeBotHandler'] = []
 
 
 class TimeBotHandler(BaseWebSocketHandler):
