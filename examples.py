@@ -50,21 +50,21 @@ class TimeBotWorkerThread(threading.Thread):
             sleep(2)
 
 
-chatbot_handlers = []
+chat_handlers = []
 
 
-class ChatBotHandler(BaseWebSocketHandler):
+class ChatHandler(BaseWebSocketHandler):
     """ WebSocketHandler that distributes incoming messages to all other clients connected.
     """
 
     def open(self, *args, **kwargs):
-        chatbot_handlers.append(self)
+        chat_handlers.append(self)
 
     def close(self, code=None, reason=None):
-        chatbot_handlers.remove(self)
+        chat_handlers.remove(self)
 
     def on_message(self, message):
-        for h in chatbot_handlers:
+        for h in chat_handlers:
             if h == self:
                 continue
             h.write_message(message)
@@ -75,7 +75,7 @@ if __name__ == '__main__':
         handlers=[
             (r'/echo', EchoBotHandler),
             (r'/time', TimeBotHandler),
-            (r'/chat', ChatBotHandler)
+            (r'/chat', ChatHandler)
         ]
     )
     app.listen(8001)
